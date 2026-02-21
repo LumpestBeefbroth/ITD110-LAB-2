@@ -58,10 +58,10 @@ function renderStudents(students) {
     students.forEach(student => {
         const row = document.createElement('tr');
         
-        // Safely handle enrollment date
+        
         let enrollmentDate = 'N/A';
         if (student.enrollmentDate) {
-            // Handle both ISO format (with T) and plain date format
+            
             const dateStr = student.enrollmentDate.split('T')[0] || student.enrollmentDate;
             const dateObj = new Date(dateStr + 'T00:00:00Z');
             if (!isNaN(dateObj)) {
@@ -69,7 +69,6 @@ function renderStudents(students) {
             }
         }
         
-        // Safely handle GPA
         let gpaDisplay = 'N/A';
         if (student.gpa !== undefined && student.gpa !== null && student.gpa !== '') {
             const gpaValue = parseFloat(student.gpa);
@@ -146,7 +145,7 @@ async function editStudent(id) {
         phoneNumberInput.value = student.phoneNumber || '';
         courseInput.value = student.course || '';
         
-        // Safe GPA conversion
+       
         if (student.gpa !== undefined && student.gpa !== null) {
             const gpaVal = parseFloat(student.gpa);
             gpaInput.value = isNaN(gpaVal) ? '' : gpaVal.toString();
@@ -154,7 +153,7 @@ async function editStudent(id) {
             gpaInput.value = '';
         }
         
-        // Safe date conversion
+        
         if (student.enrollmentDate) {
             const dateStr = student.enrollmentDate.split('T')[0] || student.enrollmentDate;
             enrollmentDateInput.value = dateStr || '';

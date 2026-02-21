@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const STUDENT_KEY = (id) => `student:${id}`;
 const STUDENTS_SET = 'students';
 
-// Get all students
+
 const getStudents = async (req, res) => {
     try {
         const studentIds = await client.sMembers(STUDENTS_SET);
@@ -24,7 +24,7 @@ const getStudents = async (req, res) => {
     }
 };
 
-// Get single student
+
 const getStudent = async (req, res) => {
     try {
         const student = await client.hGetAll(STUDENT_KEY(req.params.id));
@@ -37,7 +37,7 @@ const getStudent = async (req, res) => {
     }
 };
 
-// Create student
+
 const createStudent = async (req, res) => {
     try {
         const { name, email, course, phoneNumber, gpa, enrollmentDate } = req.body;
@@ -69,7 +69,7 @@ const createStudent = async (req, res) => {
     }
 };
 
-// Update student
+
 const updateStudent = async (req, res) => {
     try {
         const exists = await client.exists(STUDENT_KEY(req.params.id));
@@ -95,7 +95,7 @@ const updateStudent = async (req, res) => {
     }
 };
 
-// Delete student
+
 const deleteStudent = async (req, res) => {
     try {
         const exists = await client.exists(STUDENT_KEY(req.params.id));

@@ -5,8 +5,8 @@
 }
 
 :root {
-    /* MSU-IIT Maroon Palette - Android 15 Light Mode */
-    --primary-color: #8D0000; /* MSU-IIT Maroon (slightly adjusted for light mode) */
+   
+    --primary-color: #8D0000; 
     --primary-container: #FFDAD9;
     --on-primary-container: #410002;
     --primary-hover: #A51D1D;
@@ -29,13 +29,13 @@
     --text-primary: #1C1B1B;
     --text-secondary: #4A4444;
     
-    /* Android 15 Material You Shapes */
+    
     --radius-lg: 28px; 
     --radius-md: 16px;
     --radius-sm: 8px;
     --radius-full: 100px;
     
-    --shadow-lg: 0 8px 24px rgba(128, 0, 0, 0.08); /* Sophisticated subtle shadow */
+    --shadow-lg: 0 8px 24px rgba(128, 0, 0, 0.08); 
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -152,7 +152,7 @@ h2 {
     color: #9c8484;
 }
 
-/* Specific styling for Date picker in light mode */
+
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: none;
     opacity: 0.8;
@@ -354,7 +354,7 @@ tr:hover td {
     pointer-events: none;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .container {
         padding: 20px 15px;
@@ -392,7 +392,7 @@ tr:hover td {
     }
 
     th {
-        display: none; /* Hide headers on very small mobile for more space */
+        display: none; 
     }
 
     td {
