@@ -1,4 +1,5 @@
 const API_URL = 'http://localhost:3000/api/students';
+const LOGS_API_URL = 'http://localhost:3000/api/logs';
 
 const form = document.getElementById('student-form');
 const formTitle = document.getElementById('form-title');
@@ -14,15 +15,92 @@ const enrollmentDateInput = document.getElementById('enrollmentDate');
 const tbody = document.getElementById('students-tbody');
 const noStudentsMsg = document.getElementById('no-students');
 const searchInput = document.getElementById('search-input');
+const refreshLogsBtn = document.getElementById('refresh-logs-btn');
+const clearLogsBtn = document.getElementById('clear-logs-btn');
+const logsTbody = document.getElementById('logs-tbody');
+const noLogsMsg = document.getElementById('no-logs');
 
 let allStudents = [];
 let isEditing = false;
 
-document.addEventListener('DOMContentLoaded', fetchStudents);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchStudents();
+    fetchLogs();
+});
 
 form.addEventListener('submit', handleSubmit);
 cancelBtn.addEventListener('click', resetForm);
 searchInput.addEventListener('input', handleSearch);
+refreshLogsBtn.addEventListener('click', fetchLogs);
+clearLogsBtn.addEventListener('click', clearLogs);
+
+async function fetchStudents() {
+    try {
+        const response = await fetch(API_URL);
+        allStudents = await response.json();
+        renderStudents(allStudents);
+    } catch (error) {
+        console.error('Error fetching students:', error);
+    }
+}
+
+async function fetchLogs() {
+    try {
+        const response = await fetch(LOGS_API_URL);
+        const data = await response.json();
+        renderLogs(data.operations || []);
+    } catch (error) {
+        console.error('Error fetching logs:', error);
+    }
+}
+
+async function clearLogs() {
+    if (!confirm('Are you sure you want to clear all operation logs?')) {
+        return;
+    }
+
+    try {
+        await fetch(LOGS_API_URL, { method: 'DELETE' });
+        fetchLogs();
+    } catch (error) {
+        console.error('Error clearing logs:', error);
+        alert('Error clearing logs. Please try again.');
+    }
+}
+
+function renderLogs(logs) {
+    logsTbody.innerHTML = '';
+
+    if (!logs || logs.length === 0) {
+        noLogsMsg.classList.remove('hidden');
+        return;
+    }
+
+    noLogsMsg.classList.add('hidden');
+
+    logs.forEach(log => {
+        const row = document.createElement('tr');
+        const timestamp = new Date(log.timestamp).toLocaleString();
+        const statusClass = log.statusCode >= 200 && log.statusCode < 300 ? 'log-status-success' : 'log-status-error';
+        let details = 'N/A';
+
+        try {
+            const detailsObj = JSON.parse(log.details);
+            details = JSON.stringify(detailsObj, null, 0).replace(/[{}\"]/g, '').trim();
+        } catch (e) {
+            details = log.details;
+        }
+
+        row.innerHTML = `
+            <td><span class="log-timestamp">${timestamp}</span></td>
+            <td><span class="log-operation log-op-${log.operation}">${log.operation}</span></td>
+            <td>${log.method}</td>
+            <td><span class="log-status ${statusClass}">${log.statusCode}</span></td>
+            <td><span class="log-details">${details}</span></td>
+        `;
+        logsTbody.appendChild(row);
+    });
+}
 
 async function fetchStudents() {
     try {
@@ -128,6 +206,7 @@ async function handleSubmit(e) {
 
         resetForm();
         fetchStudents();
+        fetchLogs();
     } catch (error) {
         console.error('Error saving student:', error);
         alert('Error saving student. Please try again.');
@@ -182,6 +261,7 @@ async function deleteStudent(id) {
     try {
         await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
         fetchStudents();
+        fetchLogs();
     } catch (error) {
         console.error('Error deleting student:', error);
     }
